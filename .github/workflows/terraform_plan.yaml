@@ -6,23 +6,86 @@ on:
     paths: ["terraform/**"]
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  Get_OIDC_ID_token:
+  terraform-plan-dev:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: ./terraform
     steps:
-      - id: 'auth'
-        name: 'Authenticate to GCP'
-        uses: 'google-github-actions/auth@v0.3.1'
+      # Google Cloudへのアクセス認証
+      - uses: actions/checkout@v3
+      - id: auth
+        name: authenticate to GCP
+        uses: google-github-actions/auth@v0.8.2
         with:
-          create_credentials_file: 'true'
-          workload_identity_provider: ${WORKLOAD_IDENTITY_PROVIDER}
-          service_account: ${TF_PLAN_SERVICE_ACCOUNT}
-      - id: 'gcloud'
-        name: 'gcloud'
-        run: |-
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.create_credentials_file_path }}"
-          gcloud services list
+          create_credentials_file: true
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.TF_PLAN_SERVICE_ACCOUNT }}
+      - name: setup google-cloud-sdk
+        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+      # Terraformのプラン作成
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.0
+      - name: check format at root
+        id: fmt
+        run: terraform fmt -check -recursive
+        working-directory: ./terraform
+        continue-on-error: true
+      - name: init
+        run: terraform init -no-color
+      - name: validate
+        run: terraform validate
+      - name: plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+      - name: remove old comment
+        id: remove_old_comment
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            opts = github.rest.issues.listComments.endpoint.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            })
+            const comments = await github.paginate(opts)
+            for(const comment of comments) {
+              if (comment.user.login === "github-actions[bot]" && comment.body.startsWith("## Terraform Plan")) {
+                github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: comment.id,
+                })
+              }
+            }
+      - name: comment
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `## Terraform Plan
+            #### Terraform Format: \`${{ steps.fmt.outcome }}\`
+            #### Terraform Plan: \`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+            \`\`\`terraform\n${{ steps.plan.outputs.stdout }}\`\`\`
+            </details>`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      - name: judge
+        if: steps.fmt.outcome == 'failure' || steps.plan.outcome == 'failure'
+        run: exit 1
