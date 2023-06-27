@@ -2,7 +2,7 @@ name: Terraform plan for GCP
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths: ["terraform/**"]
   workflow_dispatch:
 
