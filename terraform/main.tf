@@ -15,3 +15,10 @@ resource "google_storage_bucket" "tf_state" {
   name     = "aitech-good-tfstate"
   location = "asia-northeast1"
 }
+
+terraform {
+  backend "gcs" {
+    bucket = "aitech-good-tfstate"
+    prefix = "tfstate"
+  }
+}
