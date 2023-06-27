@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform-plan-dev:
+  terraform-plan:
     runs-on: ubuntu-latest
     permissions:
       id-token: write

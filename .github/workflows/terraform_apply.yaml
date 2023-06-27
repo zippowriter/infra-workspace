@@ -6,11 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  apply:
+  terraform-apply:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    environment:
-      name: development
     permissions:
       id-token: write
       contents: read
