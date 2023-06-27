@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform-plan-dev:
+  terraform-plan:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -32,16 +32,16 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.3.0
-      - name: check format at root
+      - name: terraform fmt
         id: fmt
         run: terraform fmt -check -recursive
         working-directory: ./terraform
         continue-on-error: true
-      - name: init
+      - name: terraform init
         run: terraform init -no-color
       - name: validate
         run: terraform validate
-      - name: plan
+      - name: terrafom plan
         id: plan
         run: terraform plan -no-color -input=false
         continue-on-error: true

@@ -11,7 +11,7 @@ terraform {
   }
 }
 
-resource "google_storage_bucket" "tf_state" {
+resource "google_storage_bucket" "tfstate" {
   name     = "aitech-good-tfstate"
-  location = "asia-northeast1"
+  location = "ASIA-NORTHEAST1"
 }
