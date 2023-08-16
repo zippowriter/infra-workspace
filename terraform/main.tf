@@ -11,14 +11,18 @@ terraform {
   }
 }
 
-# resource "google_storage_bucket" "tfstate" {
-#   name     = "aitech-good-tfstate"
-#   location = "ASIA-NORTHEAST1"
-# }
-
 terraform {
   backend "gcs" {
     bucket = "aitech-good-tfstate"
     prefix = "tfstate"
   }
+}
+
+locals {
+  project_id = "aitech-good-S17919"
+}
+
+module "gcp_iam" {
+  source     = "./gcp/iam"
+  project_id = local.project_id
 }
