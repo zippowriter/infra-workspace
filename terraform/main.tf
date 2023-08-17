@@ -33,3 +33,9 @@ module "gcp_vpc" {
   project_id = local.project_id
   gcp_region = local.gcp_region
 }
+
+module "gcp_gcs" {
+  source     = "./gcp/gcs"
+  project_id = local.project_id
+  gcp_region = local.gcp_region
+}
