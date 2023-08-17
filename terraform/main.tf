@@ -20,6 +20,7 @@ terraform {
 
 locals {
   project_id = "aitech-good-S17919"
+  gcp_region = "asia-northeast1"
 }
 
 module "gcp_iam" {
@@ -30,4 +31,5 @@ module "gcp_iam" {
 module "gcp_vpc" {
   source     = "./gcp/vpc"
   project_id = local.project_id
+  gcp_region = local.gcp_region
 }
