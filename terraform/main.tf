@@ -40,3 +40,11 @@ module "gcp_gcs" {
   project_id = local.project_id
   gcp_region = local.gcp_region
 }
+
+module "gcp_vertex" {
+  source          = "./gcp/vertex"
+  gcp_region      = local.gcp_region
+  service_account = module.gcp_iam.vertex_account_email
+  network         = module.gcp_vpc.ml_network_id
+  subnet          = module.gcp_vpc.ml_network_subnet_id
+}
