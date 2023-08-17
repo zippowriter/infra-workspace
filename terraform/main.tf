@@ -26,6 +26,7 @@ locals {
 module "gcp_iam" {
   source     = "./gcp/iam"
   project_id = local.project_id
+  gcs_vertex = module.gcp_gcs.gcs_vertex
 }
 
 module "gcp_vpc" {
