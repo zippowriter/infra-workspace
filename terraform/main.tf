@@ -26,3 +26,8 @@ module "gcp_iam" {
   source     = "./gcp/iam"
   project_id = local.project_id
 }
+
+module "gcp_vpc" {
+  source     = "./gcp/vpc"
+  project_id = local.project_id
+}
