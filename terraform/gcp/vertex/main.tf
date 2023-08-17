@@ -16,7 +16,7 @@ resource "google_notebooks_instance" "ml_experiment" {
 
   boot_disk_type    = "PD_BALANCED"
   boot_disk_size_gb = 100
-  data_disk_type    = "PDBALANCED"
+  data_disk_type    = "PD_BALANCED"
   data_disk_size_gb = 100
 
   network = var.network
