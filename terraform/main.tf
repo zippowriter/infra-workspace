@@ -19,7 +19,7 @@ terraform {
 }
 
 locals {
-  project_id = "aitech-good-S17919"
+  project_id = "aitech-good-s17919"
   gcp_region = "asia-northeast1"
 }
 
