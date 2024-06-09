@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "mlops-with-vertex-ai"
+version = "0.1.0"
+description = "A project utilizing Vertex AI for MLOps."
+authors = ["zippowriter <kono_haruhi@cyberagent.co.jp>"]
+readme = "README.md"
+package-mode=false
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
