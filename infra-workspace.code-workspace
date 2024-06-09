@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "infra-workspace"
+        },
+        {
+            "path": "terraform",
+            "name": "terraform"
+        },
+        {
+            "path": "mlops",
+            "name": "mlops"
+        }
+    ],
+}
