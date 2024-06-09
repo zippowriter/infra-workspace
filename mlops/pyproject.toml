@@ -10,6 +10,14 @@ package-mode=false
 python = ">=3.11,<3.12"
 
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+
+
+[tool.poetry.group.sample-pipeline.dependencies]
+google-cloud-aiplatform = {extras = ["pipelines"], version = "^1.54.1"}
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
