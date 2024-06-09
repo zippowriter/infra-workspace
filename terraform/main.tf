@@ -23,6 +23,12 @@ locals {
   gcp_region = "asia-northeast1"
 }
 
+module "gcp_artifact_registry" {
+  source     = "./gcp/artifact_registry"
+  project_id = local.project_id
+  gcp_region = local.gcp_region
+}
+
 module "gcp_iam" {
   source     = "./gcp/iam"
   project_id = local.project_id
