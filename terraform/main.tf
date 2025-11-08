@@ -2,11 +2,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.0"
+      version = "~> 7.0"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "~> 4.0"
+      version = "~> 7.0"
     }
   }
 }
@@ -43,6 +43,12 @@ module "gcp_vpc" {
 
 module "gcp_gcs" {
   source     = "./gcp/gcs"
+  project_id = local.project_id
+  gcp_region = local.gcp_region
+}
+
+module "gcp_secret_manager" {
+  source     = "./gcp/secret_manager"
   project_id = local.project_id
   gcp_region = local.gcp_region
 }
